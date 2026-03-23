@@ -37,6 +37,8 @@ Behavior:
 
 **The method should handle edge cases such as an already sorted array, a reverse sorted array, an array containing only one color, an array containing only two of the three colors, a single-element array, arrays with alternating color patterns
 
+**The method should throw an IllegalArgumentException if the input array is null, empty, contains values other than 0, 1, and 2, or has more than 300 entries.
+
 #Example
 
 **Input: nums = [2,0,2,1,1,0]

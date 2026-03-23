@@ -1,6 +1,9 @@
 package zest;
 
 public class ReverseInteger {
+    /**
+     * Provide a empty private constructor (no tests necessary)
+     */
     private ReverseInteger() {}
 
     /**
