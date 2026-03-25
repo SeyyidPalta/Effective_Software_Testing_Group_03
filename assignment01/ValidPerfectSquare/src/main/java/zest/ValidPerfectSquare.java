@@ -1,6 +1,10 @@
 package zest;
 
 public class ValidPerfectSquare {
+    /**
+    * Provide a empty private constructor (no tests necessary)
+    */
+    private ValidPerfectSquare(){}
 
     /**
      * Returns true if num is a perfect square, false otherwise.
@@ -21,7 +25,7 @@ public class ValidPerfectSquare {
         long left = 1;
         long right = num;
 
-        while (left < right) {
+        while (left <= right) {
             long mid = left + (right - left) / 2;
             long square = mid * mid;
 

@@ -72,8 +72,8 @@ This way we do not need to test the constructor, improve the source code and ach
 
 The PIT report shows:
 - Line coverage: 96% (25/26)	
-- Mutation coverage: 100% (16/19)	
-- Test strength: 100% (16/19)
+- Mutation coverage: 100% (19/19)	
+- Test strength: 100% (19/19)
 
 The private constructor is not covered, but we do not need to test it because it is a private empty constructor 
 and the class only has static methods.
