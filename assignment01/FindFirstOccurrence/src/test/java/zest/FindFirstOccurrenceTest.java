@@ -110,4 +110,18 @@ public class FindFirstOccurrenceTest {
     void TestPartialMatch() {
         assertEquals(-1, FindFirstOccurrence.strStr("aaaab", "aaac"));
     }
+
+    @Test
+    void TestLongerNeedleWithSubstring() {
+        int expected = -1;
+        int actual = FindFirstOccurrence.strStr("aaa", "aaabc");
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void TestSubstringWithNumbers() {
+        int expected = 3;
+        int actual = FindFirstOccurrence.strStr("3334", "4");
+        assertEquals(expected, actual);
+    }
 }
