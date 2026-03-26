@@ -1,6 +1,13 @@
 package zest;
 
+import java.util.Arrays;
+
 public class SortColors {
+    /**
+     * Provide a empty private constructor (no tests necessary)
+     */
+    private SortColors() {}
+
 
     /**
      * Sorts the array in-place so that all 0s come first,
@@ -12,6 +19,12 @@ public class SortColors {
     public static void sortColors(int[] nums) {
         if (nums == null) {
             throw new IllegalArgumentException("Input array cannot be null");
+        } else if (nums.length == 0) {
+            throw new IllegalArgumentException("Input array cannot be empty");
+        } else if (nums.length > 300) {
+            throw new IllegalArgumentException("Input array cannot exceed 300 elements");
+        } else if (Arrays.stream(nums).anyMatch(n -> n < 0 || n > 2)) {
+            throw new IllegalArgumentException("Input array can only contain 0, 1, and 2");
         }
 
         int low = 0;               // boundary for 0s
