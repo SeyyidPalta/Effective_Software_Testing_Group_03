@@ -15,16 +15,16 @@ public class BestTimeToBuyAndSellStock {
             throw new IllegalArgumentException("Input array cannot be null or empty");
         }
 
-        int minPrice = 0;
+        int minPrice = prices[0]; // Bug in the source code: minPrice is initialized to 0
         int maxProfit = 0;
 
         for (int i = 1; i < prices.length; i++) {
 
-            if (prices[i] < minPrice) {
+            if (prices[i] <= minPrice) { // Condition will never be true since minPrice is initialized to 0 // Mutation survived without '='
                 minPrice = prices[i];
             } else {
                 int profit = prices[i] - minPrice;
-                if (profit > maxProfit) {
+                if (profit >= maxProfit) { // Mutation survived without '='
                     maxProfit = profit;
                 }
             }
