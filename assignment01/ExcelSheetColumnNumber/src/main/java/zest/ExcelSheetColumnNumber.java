@@ -24,7 +24,7 @@ public class ExcelSheetColumnNumber {
                 throw new IllegalArgumentException("Invalid character in column title");
             }
 
-            result = result * 26 + (c - 'A');
+            result = result * 26 + (c - 'A' + 1); // Error fix: should be + 1 since 'A' is 1
         }
 
         return result;
