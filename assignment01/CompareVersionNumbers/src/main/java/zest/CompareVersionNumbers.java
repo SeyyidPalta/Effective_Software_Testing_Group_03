@@ -27,9 +27,9 @@ public class CompareVersionNumbers {
             int num1 = (i < v1Parts.length) ? Integer.parseInt(v1Parts[i]) : 0;
             int num2 = (i < v2Parts.length) ? Integer.parseInt(v2Parts[i]) : 0;
 
-            if (num1 > num2) {
+            if (num1 < num2) { // Bug in the source code: should be inverted to align with the logic
                 return -1;
-            } else if (num1 < num2) {
+            } else if (num1 > num2) {
                 return 1;
             }
         }
