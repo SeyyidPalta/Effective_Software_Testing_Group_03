@@ -31,7 +31,12 @@ The program counts punctuations as part of the last word.
 
 
 # 2. Structural Tests
-Line coverage is 91%. The only line that is not covered by tests is the class header line (3)
+Line coverage is 92% according to JaCoCo report. The only line that is not covered by tests is the class header line (3)
 
 # 3. Mutation Tests
 One mutant could not be killed because the condition where i equals to 0 and also character at that location being " " could not be satisfied.
+
+The PIT report says:
+- Line coverage: 91% (10/11)
+- Mutation coverage: 90% (9/10)
+- Test strength: 90% (9/10)

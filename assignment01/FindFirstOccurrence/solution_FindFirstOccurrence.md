@@ -24,7 +24,7 @@ What happens if the cases are different (upper and lower)?
 - Numbers
 
 ## 1.4 Analyze the Boundaries
-The program is case sensitive, and doesn't recognize the same substrings if they have different cases.
+The program is case-sensitive, and doesn't recognize the same substrings if they have different cases.
 Special characters don't cause any issue and can be recognized as substring (needle).
 Illegal arguments such as null or not string raise IllegalArgumentsException.
 Numbers can also part of strings, and they don't cause any issue either and can be recognized as substring similar to special characters.
@@ -43,4 +43,6 @@ Line coverage is 94%. The only line that is not covered is where the class name 
 Otherwise, the current test cases cover the branches and different conditions.
 
 # 3. Mutation Tests
-Mutation coverage is 100%. So there was no need for additional test cases.
+- Line coverage: 93% (13/14)
+- Mutation coverage: 100% (15/15)
+- Test strength: 100% (15/15)

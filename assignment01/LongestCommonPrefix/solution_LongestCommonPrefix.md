@@ -25,7 +25,10 @@ Created automated tests for each test case using JUnit.
 Additional tests were added to make sure that the program doesn't work with a null input, and it throws an IllegalArgumentException.
 
 # 2. Structural Tests
-Line coverage in mutated class is 75%. Otherwise, the line coverage is 91% and branch coverage is 80%.
+Line coverage is 95% according to JaCoCo and branch coverage is 90%.
 
 # 3. Mutation Tests
-All mutants were killed by the test cases.
+The PIT report says:
+- Line coverage: 83% (10/12)
+- Mutation coverage: 100% (8/8)
+- Test strength: 100% (8/8)

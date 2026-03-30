@@ -30,6 +30,20 @@ public class LongestCommonPrefixTest {
     }
 
     @Test
+    void testEmptyString() {
+        String expected = "";
+        String actual = longestCommonPrefix(new String[]{});
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void testEmptyStringAndNormalString() {
+        String expected = "";
+        String actual = longestCommonPrefix(new String[]{"aa", ""});
+        assertEquals(expected, actual);
+    }
+
+    @Test
     void testInvalidInput() {
         assertThrows(IllegalArgumentException.class, () -> longestCommonPrefix(null));
     }
