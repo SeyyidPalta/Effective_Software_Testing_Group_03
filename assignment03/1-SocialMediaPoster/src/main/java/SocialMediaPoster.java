@@ -34,7 +34,25 @@ public class SocialMediaPoster {
      * @return number of successful posts
      */
     public int postBatch(List<String> platforms, String content) {
-        // TODO: Implement using TDD
-        throw new UnsupportedOperationException("Not yet implemented - implement using TDD");
+        if (platforms == null || platforms.isEmpty()) {
+            throw new IllegalArgumentException("Platforms list cannot be null or empty");
+        }
+
+        int counter = 0;
+        for (String platform : platforms) {
+            if (counter >= api.getRateLimitRemaining()) break;
+
+            boolean success;
+            try {
+                success = postContent(platform, content);
+            } catch (IllegalArgumentException e) {
+                continue;
+            }
+
+            if (success) { // boolean is dft false
+               counter++;
+            }
+        }
+        return counter;
     }
 }
