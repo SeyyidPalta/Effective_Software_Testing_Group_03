@@ -64,8 +64,6 @@ A mocked database connector may return perfectly formatted data, while the real 
 
 If every dependency is mocked, tests may stop representing real production behavior.
 
----
-
 # Task B - Filtering Products by Category
 
 ## TDD Iterative Process
@@ -115,8 +113,6 @@ if (category == null || category.trim().isEmpty()) {
 ```
 
 Also ensured database connections are always closed using `finally`.
-
----
 
 ## Answers for Task B
 
