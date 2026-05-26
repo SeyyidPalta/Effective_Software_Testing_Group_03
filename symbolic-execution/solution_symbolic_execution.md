@@ -87,12 +87,12 @@ b = 0 AND e = 0
 e_temp = 0 AND r >= 0
 
 ## b)
-new sub-condition: ```if (r > 0) {```
+new sub-condition: ```if (r >= 0) {```
 
 ## c)
 b=1, e=0 with these new values the changed sub-condition can be fulfilled and the assertion is violated:
 ```
-my_pow(1, 0) -> return 1 -> 0 mod 2 -> 1 > 0 -> assert(false)
+my_pow(1, 0) -> return 1 -> 0 mod 2 -> 1 >= 0 -> assert(false)
 ```
 
 ## d)
@@ -134,3 +134,7 @@ but with the concrete value from the run this becomes:
 which is unsatisfiable.
 
 ## f)
+We tried multiple ways to execute the KLEE program (within the browser and with docker) but we were not able to get a meaningful output.
+In the Web IDE no output was generated, also not for the examples, we think because it is not supported anymore.
+With the Docker image we got these errors during compilation: clang -I ../../include -emit-llvm -c -g -O0 -Xclang -disable-O0-optnone pow_client.c
+it throws no error but it also not generated the assert.err file. But the `.bc` file was generated.
