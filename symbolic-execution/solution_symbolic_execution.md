@@ -81,75 +81,28 @@ int my_pow(int b, int e) {
 
 ## a) b = e = 0
 ```
-my_pow(0, 0) -> loop is skipped -> r = 0 -> 0 mod 2 == 0 -> r < 0 is false -> return 0
+my_pow(0, 0) -> return 0 -> 0 mod 2 == 0 -> return 0
 ```
-The collected path constraint is:
-```
-e >= 0
-AND
-!(1 < e)
-AND
-e mod 2 == 0
-AND
-!(b < 0)
-```
-
-Equivalently:
-```
-e >= 0
-AND
-e <= 1
-AND
-e mod 2 == 0
-AND
-b >= 0
-```
+b = 0 AND e = 0
+e_temp = 0 AND r >= 0
 
 ## b)
-The previous run did not enter the assertion branch because `r < 0` was false.
-Since `r = b` on this path, we negate the last sub-constraint:
-```
-e >= 0
-AND
-e <= 1
-AND
-e mod 2 == 0
-AND
-b < 0
-```
-
-A satisfying assignment is:
-```
-b = -1
-e = 0
-```
+new sub-condition: ```if (r > 0) {```
 
 ## c)
-Using `b = -1, e = 0`, the second run reaches the assertion:
+b=1, e=0 with these new values the changed sub-condition can be fulfilled and the assertion is violated:
 ```
-my_pow(-1, 0) -> loop is skipped -> r = -1 -> 0 mod 2 == 0 -> r < 0 -> assert(false)
-```
-
-The collected path constraint is:
-```
-e >= 0
-AND
-e <= 1
-AND
-e mod 2 == 0
-AND
-b < 0
+my_pow(1, 0) -> return 1 -> 0 mod 2 -> 1 > 0 -> assert(false)
 ```
 
 ## d)
-If `my_pow` is a black-box library function, concolic execution cannot build a symbolic expression for its result.
-For the concrete input `b = 0, e = 0`, the library call is only executed concretely:
+In this blackbox scenario, for the input `b = 0, e = 0`, the library call is only executed as:
 ```
 my_pow(0, 0) = 0
 ```
 
 So after the call, `r` is treated as the concrete value `0`, not as a symbolic expression depending on `b` and `e`.
-The visible branches in `pow_client` give the following path constraint:
+So we will have: 
 ```
 e mod 2 == 0
 AND
@@ -163,13 +116,13 @@ AND
 0 >= 0
 ```
 
-Thus the only meaningful symbolic constraint learned from this execution is that `e` is even.
+Therefore, the only meaningful symbolic constraint is that `e` is even.
 
 ## e)
 No, we cannot proceed analogously to subtasks b)-c).
-In the white-box setting, concolic execution can express `r` symbolically in terms of `b` and `e`, so negating the branch condition `r < 0` can lead to a useful new input.
+In the white-box scenario, concolic execution can express `r` symbolically in terms of `b` and `e`, so negating the branch condition `r < 0` can lead to a useful new input.
 
-In the black-box setting, the execution only knows the concrete result `r = 0` for the first run.
+In the black-box scenario, the execution only knows the concrete result `r = 0` for the first run.
 Negating the second branch condition would require:
 ```
 r < 0
@@ -180,79 +133,4 @@ but with the concrete value from the run this becomes:
 ```
 which is unsatisfiable.
 
-Therefore, the concolic engine cannot derive the input `b < 0, e = 0`, for example `b = -1, e = 0`, from the collected path constraints.
-Pure concolic execution will not systematically reach the assertion in this example when `my_pow` is treated as a black box.
-It could only hit the bug by chance, or with some additional input generation strategy that tries unconstrained values for `b`.
-
 ## f)
-A KLEE harness for the program can look like this:
-```
-#include <assert.h>
-#include <stdbool.h>
-#include <klee/klee.h>
-
-int my_pow(int b, int e) {
-    int r = b;
-    for (int i = 1; i < e; i++) {
-        r = r * b;
-    }
-    return r;
-}
-
-int pow_client(int b, int e) {
-    int r = my_pow(b, e);
-    if (e % 2 == 0) {
-        if (r < 0) {
-            klee_assert(false);
-        }
-    }
-    return r;
-}
-
-int main(void) {
-    int b;
-    int e;
-    klee_make_symbolic(&b, sizeof(b), "b");
-    klee_make_symbolic(&e, sizeof(e), "e");
-    klee_assume(e >= 0);
-
-    pow_client(b, e);
-    return 0;
-}
-```
-
-Compile and run it with Z3 and stop at the first assertion failure:
-```
-clang -I /path/to/klee/include -emit-llvm -c -g -O0 -Xclang -disable-O0-optnone pow_client.c
-klee -solver-backend=z3 -exit-on-error pow_client.bc
-```
-
-KLEE finds the bug on the path where the loop in `my_pow` is skipped, `e` is even, and `r < 0`.
-The corresponding path condition is:
-```
-e >= 0
-AND
-!(1 < e)
-AND
-e mod 2 == 0
-AND
-b < 0
-```
-
-One satisfying test case is:
-```
-b = -1
-e = 0
-```
-
-For this input:
-```
-my_pow(-1, 0) = -1
-e mod 2 == 0
-r < 0
-```
-so `klee_assert(false)` is reached.
-
-With `-exit-on-error`, KLEE stops as soon as this failing path is found.
-In the run where this path is selected first, KLEE has `0` completed non-error paths before the failure and produces `1` test case, the assertion-failing one.
-It is usually stored as `klee-last/test000001.ktest` or another `test<x>.ktest` depending on the exploration order.
