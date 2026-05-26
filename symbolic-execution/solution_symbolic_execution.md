@@ -87,54 +87,42 @@ b = 0 AND e = 0
 e_temp = 0 AND r >= 0
 
 ## b)
-new sub-condition: ```if (r >= 0) {```
+new sub-condition: ```if (r > 0) {```
 
 ## c)
 b=1, e=0 with these new values the changed sub-condition can be fulfilled and the assertion is violated:
 ```
-my_pow(1, 0) -> return 1 -> 0 mod 2 -> 1 >= 0 -> assert(false)
+my_pow(1, 0) -> return 1 -> 0 mod 2 -> 1 > 0 -> assert(false)
 ```
 
 ## d)
-In this blackbox scenario, for the input `b = 0, e = 0`, the library call is only executed as:
+When 'my_pow' is treated as a library function, the concolic execution cannot symbolically execute its body. So for the input `b = 0, e = 0`, the library call 
 ```
 my_pow(0, 0) = 0
 ```
+is evaluated only concretely and returns '0'.
 
-So after the call, `r` is treated as the concrete value `0`, not as a symbolic expression depending on `b` and `e`.
-So we will have: 
+So in 'pow_client', 'r' is not treated as a symbolic expression but just the value 0. However, the executor can still collect constraints from 
 ```
 e mod 2 == 0
-AND
-!(r < 0)
 ```
+The inner condition r < 0 becomes 0 < 0, which does not make sense.
 
-Since `r` is concrete in this run, this is:
-```
-e mod 2 == 0
-AND
-0 >= 0
-```
-
-Therefore, the only meaningful symbolic constraint is that `e` is even.
+In conclusion, the only meaningful symbolic constraint is that `e` is even.
 
 ## e)
-No, we cannot proceed analogously to subtasks b)-c).
-In the white-box scenario, concolic execution can express `r` symbolically in terms of `b` and `e`, so negating the branch condition `r < 0` can lead to a useful new input.
+No.
+In the white-box scenario, the executor knows that for `e = 0`, `my_pow(b, e)` returns `b`. Therefore it can turn the condition `r < 0` into `b < 0` and generate an input such as `b = -1, e = 0`.
+But in the black-box scenario, this relationship is lost. The executor only observed that the previous concrete call returned `r = 0`. If we negate the inner branch condition, we get: 
 
-In the black-box scenario, the execution only knows the concrete result `r = 0` for the first run.
-Negating the second branch condition would require:
-```
+'''
 r < 0
-```
-but with the concrete value from the run this becomes:
-```
+'''
+but for the observed execution, it means: 
+'''
 0 < 0
-```
+'''
 which is unsatisfiable.
 
 ## f)
-We tried multiple ways to execute the KLEE program (within the browser and with docker) but we were not able to get a meaningful output.
-In the Web IDE no output was generated, also not for the examples, we think because it is not supported anymore.
-With the Docker image we got these errors during compilation: clang -I ../../include -emit-llvm -c -g -O0 -Xclang -disable-O0-optnone pow_client.c
-it throws no error but it also not generated the assert.err file. But the `.bc` file was generated.
+We tried multiple ways to execute the KLEE program (within the browser and with docker) but we were not able to get a meaningful output. In the Web IDE no output was generated, also not for the examples, we think because it is not supported anymore. With the Docker image we got these errors during compilation: clang -I ../../include -emit-llvm -c -g -O0 -Xclang -disable-O0-optnone pow_client.c it throws no error but it also not generated the assert.err file. But the .bc file was generated.
