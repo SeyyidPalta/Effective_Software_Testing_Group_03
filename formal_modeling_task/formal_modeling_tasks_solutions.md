@@ -2,8 +2,6 @@
 
 ### a) Class Diagram
 
-A suitable class structure is the following:
-
 ```text
 +----------------+
 |   University   |
