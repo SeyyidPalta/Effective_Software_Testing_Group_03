@@ -55,3 +55,44 @@ int under_approx_gcd(int a, int b, int n) {
     }
 }
 ```
+
+# Task 2
+```
+int pow_client(int b, int e) {
+    int r = my_pow(b, e);
+    if (e mod 2 == 0) {
+        if (r < 0) { // (*)
+            assert(false); // should not happen
+        }
+    }
+    return r;
+}
+
+int my_pow(int b, int e) {
+    int r = b;
+    for (int i = 1; i < e; i++) {
+        r = r * b;
+    }
+    return r;
+}
+// incorrect implementation
+```
+
+
+## a) b = e = 0
+```
+my_pow(0, 0) -> return 0 -> 0 mod 2 == 0 -> return 0
+```
+b = 0 AND e = 0
+e_temp = 0 AND r >= 0
+
+## b)
+new sub-condition: ```if (r > 0) {```
+
+## c)
+b=1, e=0 with these new values the changed sub-condition can be fulfilled and the assertion is violated:
+```
+my_pow(1, 0) -> return 1 -> 0 mod 2 -> 1 > 0 -> assert(false)
+```
+
+## d)

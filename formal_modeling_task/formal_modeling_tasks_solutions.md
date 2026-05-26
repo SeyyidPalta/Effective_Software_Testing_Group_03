@@ -168,17 +168,13 @@ there must exist:
 
 all as distinct stations.
 
-However, the scope forces exactly one `UZHBusStation`, which contradicts the declaration of four singleton stations.
+However, the scope forces exactly one `UZHBus` to be at one bus station, but not that the next bus station can be the same bus station. 
+Therefore when every bus station is its own next bus station (looping thereself) the conditions should be satisfied:
 
-Therefore:
-
-## Result
-
-```text
-No instance exists.
-```
-
-The Alloy analyzer would report the model as UNSAT (unsatisfiable).
+- Oerlikon -> Oerlikon
+- Schlieren -> Schlieren
+- Irchel -> Irchel
+- ZurichCity -> ZurichCity
 
 ## b) Corrected Alloy Model
 
